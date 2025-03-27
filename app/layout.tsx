@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header";
+import SidebarContainer from "@/components/sidebar-container";
 
 export const metadata: Metadata = {
   title: "v0 App",
@@ -8,17 +9,28 @@ export const metadata: Metadata = {
   generator: "v0.dev",
 };
 
-export default function RootLayout({
+async function getCategories() {
+  const response = await fetch(`${process.env.API_URL}/api`);
+  return response.json();
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const categories = await getCategories();
+
   return (
     <html lang="ko">
       <body>
         <div className="flex flex-col h-screen">
           <Header />
-          <div className="flex flex-1 overflow-hidden">{children}</div>
+          <div className="flex flex-1 overflow-hidden">
+            <SidebarContainer categories={categories}>
+              {children}
+            </SidebarContainer>
+          </div>
         </div>
       </body>
     </html>

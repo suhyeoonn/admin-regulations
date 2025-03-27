@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Sidebar from "@/components/sidebar";
-import ContentArea from "@/components/content-area";
 
 type CategoryItem = {
   id: string;
@@ -10,17 +9,16 @@ type CategoryItem = {
   children?: CategoryItem[];
 };
 
-type AdminRegulationsPageProps = {
+type SidebarContainerProps = {
   categories: CategoryItem[];
+  children: React.ReactNode;
 };
 
-export default function AdminRegulationsPage({
+export default function SidebarContainer({
   categories,
-}: AdminRegulationsPageProps) {
+  children,
+}: SidebarContainerProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [selectedRegulation, setSelectedRegulation] = useState<string | null>(
-    null
-  );
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const toggleSidebar = () => {
@@ -35,12 +33,13 @@ export default function AdminRegulationsPage({
         onToggle={toggleSidebar}
         onSelectCategory={setSelectedCategory}
       />
-      <ContentArea
-        isSidebarCollapsed={isSidebarCollapsed}
-        selectedRegulation={selectedRegulation}
-        onSelectRegulation={setSelectedRegulation}
-        selectedCategory={selectedCategory}
-      />
+      <div
+        className={`flex-1 p-6 overflow-auto ${
+          isSidebarCollapsed ? "ml-0" : ""
+        }`}
+      >
+        {children}
+      </div>
     </>
   );
 }

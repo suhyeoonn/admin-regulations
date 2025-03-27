@@ -1,11 +1,7 @@
-import AdminRegulationsPage from "@/components/admin-regulations-page";
-
-async function getCategories() {
-  const response = await fetch(`${process.env.API_URL}/api`);
-  return response.json();
-}
-
-export default async function Home() {
-  const categories = await getCategories();
-  return <AdminRegulationsPage categories={categories} />;
+export default function MainPage() {
+  return (
+    <div className="flex items-center justify-center h-64">
+      <p className="text-gray-500">좌측 메뉴에서 카테고리를 선택하세요.</p>
+    </div>
+  );
 }
