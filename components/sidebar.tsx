@@ -23,6 +23,7 @@ export default function Sidebar({
   onToggle,
   onSelectCategory,
 }: SidebarProps) {
+  console.log(categories);
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >(
