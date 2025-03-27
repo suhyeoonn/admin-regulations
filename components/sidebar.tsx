@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronRight, ChevronDown, FileText, ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
 type CategoryItem = {
   id: string;
@@ -92,7 +93,7 @@ export default function Sidebar({
                         onClick={() => handleCategoryClick(child.id)}
                       >
                         <FileText className="h-4 w-4 mr-2" />
-                        <span>{child.name}</span>
+                        <Link href={`/${child.id}`}>{child.name}</Link>
                       </div>
                     </li>
                   ))}
