@@ -1,65 +1,46 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ChevronRight, ChevronDown, FileText, ChevronLeft } from "lucide-react"
+import { useState } from "react";
+import { ChevronRight, ChevronDown, FileText, ChevronLeft } from "lucide-react";
 
 type CategoryItem = {
-  id: string
-  name: string
-  children?: CategoryItem[]
-}
+  id: string;
+  name: string;
+  children?: CategoryItem[];
+};
 
 type SidebarProps = {
-  isCollapsed: boolean
-  onToggle: () => void
-  onSelectCategory: (category: string) => void
-}
+  categories: CategoryItem[];
+  isCollapsed: boolean;
+  onToggle: () => void;
+  onSelectCategory: (category: string) => void;
+};
 
-export default function Sidebar({ isCollapsed, onToggle, onSelectCategory }: SidebarProps) {
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    cat1: false,
-    cat2: false,
-    cat3: false,
-  })
-
-  const categories: CategoryItem[] = [
-    {
-      id: "cat1",
-      name: "인사 규정",
-      children: [
-        { id: "cat1-1", name: "근무 규정" },
-        { id: "cat1-2", name: "휴가 규정" },
-        { id: "cat1-3", name: "급여 규정" },
-      ],
-    },
-    {
-      id: "cat2",
-      name: "재무 규정",
-      children: [
-        { id: "cat2-1", name: "회계 규정" },
-        { id: "cat2-2", name: "구매 규정" },
-      ],
-    },
-    {
-      id: "cat3",
-      name: "보안 규정",
-      children: [
-        { id: "cat3-1", name: "정보보안 규정" },
-        { id: "cat3-2", name: "시설보안 규정" },
-      ],
-    },
-  ]
+export default function Sidebar({
+  categories,
+  isCollapsed,
+  onToggle,
+  onSelectCategory,
+}: SidebarProps) {
+  const [expandedCategories, setExpandedCategories] = useState<
+    Record<string, boolean>
+  >(
+    categories.reduce((acc, cat) => {
+      acc[cat.id] = false;
+      return acc;
+    }, {} as Record<string, boolean>)
+  );
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories((prev) => ({
       ...prev,
       [categoryId]: !prev[categoryId],
-    }))
-  }
+    }));
+  };
 
   const handleCategoryClick = (categoryId: string) => {
-    onSelectCategory(categoryId)
-  }
+    onSelectCategory(categoryId);
+  };
 
   if (isCollapsed) {
     return (
@@ -68,7 +49,7 @@ export default function Sidebar({ isCollapsed, onToggle, onSelectCategory }: Sid
           <ChevronRight className="h-5 w-5" />
         </button>
       </div>
-    )
+    );
   }
 
   return (
@@ -95,7 +76,10 @@ export default function Sidebar({ isCollapsed, onToggle, onSelectCategory }: Sid
                   )}
                 </button>
                 <FileText className="h-4 w-4 mr-2" />
-                <span onClick={() => handleCategoryClick(category.id)} className="flex-1">
+                <span
+                  onClick={() => handleCategoryClick(category.id)}
+                  className="flex-1"
+                >
                   {category.name}
                 </span>
               </div>
@@ -119,6 +103,5 @@ export default function Sidebar({ isCollapsed, onToggle, onSelectCategory }: Sid
         </ul>
       </div>
     </div>
-  )
+  );
 }
-

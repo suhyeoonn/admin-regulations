@@ -1,6 +1,11 @@
-import AdminRegulationsPage from "@/components/admin-regulations-page"
+import AdminRegulationsPage from "@/components/admin-regulations-page";
 
-export default function Home() {
-  return <AdminRegulationsPage />
+async function getCategories() {
+  const response = await fetch(`${process.env.API_URL}/api`);
+  return response.json();
 }
 
+export default async function Home() {
+  const categories = await getCategories();
+  return <AdminRegulationsPage categories={categories} />;
+}
