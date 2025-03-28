@@ -1,13 +1,15 @@
-import mysql from "mysql2/promise";
+import oracledb from "oracledb";
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
+// Oracle 클라이언트 초기화
+oracledb.initOracleClient();
+
+const pool = oracledb.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+  connectString: process.env.DB_CONNECT_STRING, // 예: "localhost:1521/XEPDB1"
+  poolMin: 10,
+  poolMax: 10,
+  poolIncrement: 0,
 });
 
 export default pool;

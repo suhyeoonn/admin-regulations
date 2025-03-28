@@ -19,8 +19,8 @@ interface DatabaseRow {
 
 export async function GET() {
   try {
-    const [rows] = await pool.execute(`
-      WITH RECURSIVE regulation_cte AS (
+    const result = await pool.execute(`
+      WITH regulation_cte AS (
         SELECT 
           id,
           branch_cd,
@@ -28,7 +28,7 @@ export async function GET() {
           parent_id,
           depth,
           sort_order,
-          CAST(name AS CHAR(1000)) AS path
+          CAST(name AS VARCHAR2(1000)) AS path
         FROM regulation_tree
         WHERE parent_id IS NULL AND branch_cd = '7000' 
 
@@ -41,7 +41,7 @@ export async function GET() {
           r.parent_id,
           r.depth,
           r.sort_order,
-          CONCAT(rc.path, ' > ', r.name) AS path
+          rc.path || ' > ' || r.name AS path
         FROM regulation_tree r
         JOIN regulation_cte rc ON r.parent_id = rc.id
       )
@@ -50,8 +50,11 @@ export async function GET() {
       ORDER BY path
     `);
 
+    // Oracle 결과에서 rows 추출
+    const rows = result.rows as DatabaseRow[];
+
     // 데이터를 계층 구조로 변환
-    const categories = transformToHierarchy(rows as DatabaseRow[]);
+    const categories = transformToHierarchy(rows);
 
     return NextResponse.json(categories);
   } catch (error) {
