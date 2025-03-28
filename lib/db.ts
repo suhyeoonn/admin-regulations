@@ -1,9 +1,13 @@
 import oracledb from "oracledb";
 
 // Oracle 클라이언트 초기화
-oracledb.initOracleClient();
+try {
+  oracledb.initOracleClient();
+} catch (err) {
+  console.error("Oracle 클라이언트 초기화 실패:", err);
+}
 
-const pool = oracledb.createPool({
+const poolPromise = oracledb.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   connectString: process.env.DB_CONNECT_STRING, // 예: "localhost:1521/XEPDB1"
@@ -12,4 +16,4 @@ const pool = oracledb.createPool({
   poolIncrement: 0,
 });
 
-export default pool;
+export default poolPromise;
