@@ -1,5 +1,9 @@
 import oracledb from "oracledb";
 
+// 운영 체제에 따라 Oracle 클라이언트 초기화
+if (process.env.OS_TYPE === "WINDOWS") {
+  oracledb.initOracleClient({ libDir: "C:\\oracle\\instantclient_21_14" });
+}
 oracledb.autoCommit = true;
 
 export async function getConnection() {
