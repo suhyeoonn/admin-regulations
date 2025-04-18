@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "@/components/sidebar";
+import Sidebar from "@/components/layout/sidebar";
+import { CollapsedSidebar } from "./collapsed-sidebar";
 
 type CategoryItem = {
   id: string;
@@ -25,11 +26,14 @@ export default function SidebarContainer({
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
+  if (isSidebarCollapsed) {
+    return <CollapsedSidebar onToggle={toggleSidebar} />;
+  }
+
   return (
     <>
       <Sidebar
         categories={categories}
-        isCollapsed={isSidebarCollapsed}
         onToggle={toggleSidebar}
         onSelectCategory={setSelectedCategory}
       />

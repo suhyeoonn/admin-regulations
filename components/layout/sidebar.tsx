@@ -12,14 +12,12 @@ type CategoryItem = {
 
 type SidebarProps = {
   categories: CategoryItem[];
-  isCollapsed: boolean;
   onToggle: () => void;
   onSelectCategory: (category: string) => void;
 };
 
 export default function Sidebar({
   categories,
-  isCollapsed,
   onToggle,
   onSelectCategory,
 }: SidebarProps) {
@@ -43,16 +41,6 @@ export default function Sidebar({
   const handleCategoryClick = (categoryId: string) => {
     onSelectCategory(categoryId);
   };
-
-  if (isCollapsed) {
-    return (
-      <div className="w-12 bg-gray-100 border-r border-gray-200 flex flex-col">
-        <button onClick={onToggle} className="p-3 hover:bg-gray-200 self-end">
-          <ChevronRight className="h-5 w-5" />
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="w-64 bg-gray-100 border-r border-gray-200 flex flex-col">
@@ -82,7 +70,7 @@ export default function Sidebar({
                   onClick={() => handleCategoryClick(category.id)}
                   className="flex-1"
                 >
-                  {category.name}
+                  <Link href={`/${category.id}`}>{category.name}</Link>
                 </span>
               </div>
               {expandedCategories[category.id] && category.children && (

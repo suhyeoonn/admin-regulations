@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import RegulationEditor from "@/components/regulation-editor";
-import RegulationTable from "@/components/regulation-table";
+import RegulationList from "@/components/regulation-list";
 
 type ContentAreaProps = {
-  regulation: Regulation[];
-  selectedRegulation: string | null;
-  onSelectRegulation: (id: string) => void;
-  selectedCategory: string | null;
+  treeId: string;
 };
 
 type Regulation = {
@@ -19,51 +16,31 @@ type Regulation = {
   content: string;
 };
 
-export default function ContentArea({
-  regulation,
-  selectedRegulation,
-  onSelectRegulation,
-  selectedCategory,
-}: ContentAreaProps) {
-  const [regulations, setRegulations] = useState<Record<string, Regulation[]>>({
-    "cat1-1": [
-      { id: "reg1", title: "제 1장 총칙", content: "본 규정은..." },
-      {
-        id: "reg2",
-        title: "제 1조 목적",
-        content: "이 규정은 회사의 근무에 관한...",
-      },
-      {
-        id: "reg3",
-        title: "제 2조 적용범위",
-        content: "이 규정은 모든 직원에게 적용된다.",
-      },
-    ],
-    "cat1-2": [
-      { id: "reg4", title: "제 1장 휴가", content: "휴가 관련 내용..." },
-      { id: "reg5", title: "제 1조 정의", content: "휴가라 함은..." },
-    ],
-    "cat2-1": [
-      { id: "reg6", title: "제 1장 회계원칙", content: "회계 원칙에 관한..." },
-    ],
-  });
+export default function ContentArea({ treeId }: ContentAreaProps) {
+  const [selectedRegulation, setSelectedRegulation] = useState<string | null>(
+    null
+  );
 
   const [editorContent, setEditorContent] = useState("");
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [newRegulationTitle, setNewRegulationTitle] = useState("");
+  const [regulations, setRegulations] = useState([]);
 
-  const handleRegulationSelect = (id: string) => {
-    onSelectRegulation(id);
+  useEffect(() => {
+    async function getRegulations() {
+      const response = await fetch(
+        `http://localhost:3001/api/regulations/${treeId}`
+      ); // TODO: next config로 프록시설정
+      console.log(response);
+      const data = await response.json();
 
-    if (selectedCategory) {
-      const regulation = regulations[selectedCategory]?.find(
-        (r: Regulation) => r.id === id
-      );
-      if (regulation) {
-        setEditorContent(regulation.content);
-      }
+      setRegulations(data);
     }
 
+    getRegulations();
+  }, []);
+
+  const handleRegulationSelect = (id: string) => {
     setIsAddingNew(false);
   };
 
@@ -75,7 +52,6 @@ export default function ContentArea({
     setIsAddingNew(true);
     setEditorContent("");
     setNewRegulationTitle("");
-    onSelectRegulation("");
   };
 
   const handleSaveNew = () => {
@@ -83,7 +59,6 @@ export default function ContentArea({
       const newId = `reg${Date.now()}`;
 
       setIsAddingNew(false);
-      onSelectRegulation(newId);
       alert("새 규정이 추가되었습니다.");
     } else {
       alert("제목을 입력해주세요.");
@@ -102,8 +77,8 @@ export default function ContentArea({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-1">
-          <RegulationTable
-            regulations={regulation}
+          <RegulationList
+            regulations={regulations}
             selectedRegulation={selectedRegulation}
             onSelectRegulation={handleRegulationSelect}
           />

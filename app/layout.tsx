@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/header";
-import SidebarContainer from "@/components/sidebar-container";
+import Header from "@/components/layout/header";
+import SidebarContainer from "@/components/layout/sidebar-container";
 
 export const metadata: Metadata = {
   title: "v0 App",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 async function getCategories() {
-  const response = await fetch(`${process.env.API_URL}/api`);
+  const response = await fetch(`${process.env.API_URL}/api`); // TODO: next config로 프록시설정
   return response.json();
 }
 

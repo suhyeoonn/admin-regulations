@@ -1,15 +1,5 @@
--- 테이블 생성
-CREATE TABLE regulation_tree (
-    id NUMBER GENERATED ALWAYS AS IDENTITY,
-    branch_cd VARCHAR2(20) NOT NULL,
-    name VARCHAR2(255) NOT NULL,
-    parent_id NUMBER,
-    sort_order NUMBER DEFAULT 0,
-    depth NUMBER DEFAULT 0,
-    CONSTRAINT pk_regulation_tree PRIMARY KEY (id)
-);
-
 -- 데이터 삽입
+-- 규정 목록
 INSERT INTO regulation_tree (branch_cd, name, parent_id, sort_order, depth) 
 VALUES ('7000', '인사/복무', NULL, 1, 0);
 
@@ -30,3 +20,22 @@ VALUES ('7000', '취업규칙', 3, 1, 2);
 
 INSERT INTO regulation_tree (branch_cd, name, parent_id, sort_order, depth) 
 VALUES ('7000', '인사규정', 6, 1, 3);
+
+-- 규정 항목
+INSERT INTO regulation (tree_id, title, content)
+VALUES (1, '제 1장 총칙', '본 규정은...');
+
+INSERT INTO regulation (tree_id, title, content)
+VALUES (1, '제 1조 목적', '이 규정은 회사의 근무에 관한...');
+
+INSERT INTO regulation (tree_id, title, content)
+VALUES (1, '제 2조 적용범위', '이 규정은 모든 직원에게 적용된다.');
+
+INSERT INTO regulation (tree_id, title, content)
+VALUES (2, '제 1장 휴가', '휴가 관련 내용...');
+
+INSERT INTO regulation (tree_id, title, content)
+VALUES (2, '제 1조 정의', '휴가라 함은...');
+
+INSERT INTO regulation (tree_id, title, content)
+VALUES (3, '제 1장 회계원칙', '회계 원칙에 관한...');
